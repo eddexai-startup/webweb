@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight, Compass, Shield, Maximize2, ShieldCheck } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'motion/react';
+import { ROOF_IMAGES, FALLBACK_IMAGES } from '../assets/images';
 
 interface HeroProps {
   onOpenConsultation: () => void;
@@ -27,11 +28,20 @@ export const Hero: React.FC<HeroProps> = ({ onOpenConsultation, onExploreSystems
             className="w-full h-[115%] -top-[7.5%] relative"
           >
             <img
-              src="/src/assets/images/hero_architectural_roof_1792831595834.jpg"
+              src={ROOF_IMAGES.heroRoof}
               alt="Modern architectural residence with dusk lighting and precision metal roof"
+              width={1920}
+              height={1080}
+              decoding="async"
               className="w-full h-full object-cover object-center"
               referrerPolicy="no-referrer"
               loading="eager"
+              onError={(e) => {
+                const target = e.currentTarget;
+                if (!target.src.includes(FALLBACK_IMAGES.heroRoof)) {
+                  target.src = FALLBACK_IMAGES.heroRoof;
+                }
+              }}
             />
             {/* Cinematic Scrim matching reference (darkened gradient on left for high-contrast crisp text) */}
             <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-black/20" />
@@ -170,7 +180,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenConsultation, onExploreSystems
 
       {/* Sub-Hero Architectural Metric Strip with entrance animations */}
       <div className="bg-[#161719] border-y border-white/10 py-7">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-left">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
           {[
             { label: 'Slope Compatibility', val: '0.5:12 to 12:12', desc: 'From flat commercial to steep pitch' },
             { label: 'Uplift Resistance', val: 'UL 580 Class 90', desc: 'Engineered for 140+ mph wind zones' },

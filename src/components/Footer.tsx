@@ -96,13 +96,14 @@ export const Footer: React.FC<FooterProps> = ({ onOpenConsultation, onOpenPropos
             <span className="text-xs font-semibold text-white uppercase tracking-wider block">
               Direct Contact
             </span>
-            <button
-              onClick={onOpenConsultation}
+            <a
+              href="tel:+15557624676"
               className="text-left text-sm font-semibold text-white hover:text-[#D4A373] transition-colors flex items-center gap-1.5 cursor-pointer"
+              aria-label="Call Robinson Roofing at (555) 762-4676"
             >
               <ArrowRight className="w-4 h-4 text-[#D4A373]" />
               <span>(555) 762-4676</span>
-            </button>
+            </a>
             <p className="text-[11px] text-[#94A3B8] leading-normal pt-1">
               Ready for production telephone and CRM webhook integration.
             </p>

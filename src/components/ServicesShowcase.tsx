@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowRight, CheckCircle2, Shield, Wrench, RefreshCw, Layers } from 'lucide-react';
 import { motion } from 'motion/react';
+import { ROOF_IMAGES, FALLBACK_IMAGES } from '../assets/images';
 
 interface ServicesShowcaseProps {
   onSelectServiceForEstimate: (serviceId: 'standing-seam' | 'slate-tile' | 'commercial-membrane' | 'restoration-coating') => void;
@@ -8,7 +9,7 @@ interface ServicesShowcaseProps {
 
 export const ServicesShowcase: React.FC<ServicesShowcaseProps> = ({ onSelectServiceForEstimate }) => {
   return (
-    <section id="capabilities" className="py-20 lg:py-28 border-b border-white/5 bg-[#0B0D11] overflow-hidden">
+    <section id="capabilities" className="scroll-mt-24 py-20 lg:py-28 border-b border-white/5 bg-[#0B0D11] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header with Reveal */}
@@ -43,11 +44,20 @@ export const ServicesShowcase: React.FC<ServicesShowcaseProps> = ({ onSelectServ
           >
             <div className="aspect-[4/3] rounded-lg overflow-hidden border border-white/10 bg-[#141820] shadow-2xl relative">
               <img
-                src="/src/assets/images/service_standing_seam_1792831596442.jpg"
+                src={ROOF_IMAGES.standingSeam}
                 alt="Architectural Standing Seam metal roof with continuous hidden fasteners"
+                width={800}
+                height={600}
+                decoding="async"
                 className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 referrerPolicy="no-referrer"
                 loading="lazy"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (!target.src.includes(FALLBACK_IMAGES.standingSeam)) {
+                    target.src = FALLBACK_IMAGES.standingSeam;
+                  }
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>
@@ -162,11 +172,20 @@ export const ServicesShowcase: React.FC<ServicesShowcaseProps> = ({ onSelectServ
           >
             <div className="aspect-[4/3] rounded-lg overflow-hidden border border-white/10 bg-[#141820] shadow-2xl relative">
               <img
-                src="/src/assets/images/service_tile_slate_1792831597010.jpg"
+                src={ROOF_IMAGES.tileSlate}
                 alt="Artisan roofer installing natural slate tiles with copper fasteners"
+                width={800}
+                height={600}
+                decoding="async"
                 className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 referrerPolicy="no-referrer"
                 loading="lazy"
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (!target.src.includes(FALLBACK_IMAGES.tileSlate)) {
+                    target.src = FALLBACK_IMAGES.tileSlate;
+                  }
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>
@@ -191,11 +210,20 @@ export const ServicesShowcase: React.FC<ServicesShowcaseProps> = ({ onSelectServ
             <div>
               <div className="aspect-[16/9] rounded-lg overflow-hidden mb-6 border border-white/5 relative">
                 <img
-                  src="/src/assets/images/service_commercial_membrane_1792831596263.jpg"
+                  src={ROOF_IMAGES.commercialMembrane}
                   alt="Commercial flat roof installation with welded waterproof membrane"
+                  width={800}
+                  height={450}
+                  decoding="async"
                   className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   referrerPolicy="no-referrer"
                   loading="lazy"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    if (!target.src.includes(FALLBACK_IMAGES.commercialMembrane)) {
+                      target.src = FALLBACK_IMAGES.commercialMembrane;
+                    }
+                  }}
                 />
                 <span className="absolute bottom-3 left-3 text-[11px] font-mono bg-[#0B0D11]/90 backdrop-blur px-2.5 py-1 rounded text-white border border-white/10 shadow">
                   TPO / EPDM Systems

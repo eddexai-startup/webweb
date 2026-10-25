@@ -42,7 +42,7 @@ export const FaqSection: React.FC = () => {
   };
 
   return (
-    <section id="faq" className="py-20 lg:py-28 border-b border-white/5 bg-[#0D1017] overflow-hidden">
+    <section id="faq" className="scroll-mt-24 py-20 lg:py-28 border-b border-white/5 bg-[#0D1017] overflow-hidden">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}

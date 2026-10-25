@@ -11,7 +11,9 @@ import {
   Building2,
   Home,
   Landmark,
-  Factory
+  Factory,
+  Copy,
+  Check
 } from 'lucide-react';
 import {
   calculateRoofScope,
@@ -43,6 +45,7 @@ export const ConsultationEstimator: React.FC<ConsultationEstimatorProps> = ({
 
   // UI status
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [copiedRef, setCopiedRef] = useState(false);
   const [submittedDocket, setSubmittedDocket] = useState<{
     referenceId: string;
     timestamp: string;
@@ -57,6 +60,14 @@ export const ConsultationEstimator: React.FC<ConsultationEstimatorProps> = ({
       serviceType: string;
     };
   } | null>(null);
+
+  const handleCopyReference = (refId: string) => {
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(refId).catch(() => {});
+    }
+    setCopiedRef(true);
+    setTimeout(() => setCopiedRef(false), 2000);
+  };
 
   // Compute live scope
   const calculation = calculateRoofScope({
@@ -120,7 +131,7 @@ export const ConsultationEstimator: React.FC<ConsultationEstimatorProps> = ({
   };
 
   return (
-    <section id="consultation" className="py-20 lg:py-28 border-b border-white/5 bg-[#0B0D11] scroll-mt-10">
+    <section id="consultation" className="scroll-mt-24 py-20 lg:py-28 border-b border-white/5 bg-[#0B0D11]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -140,9 +151,9 @@ export const ConsultationEstimator: React.FC<ConsultationEstimatorProps> = ({
         {submittedDocket ? (
           /* Successful Consultation Docket View */
           <div className="max-w-3xl mx-auto p-8 sm:p-10 rounded-xl bg-[#121620] border border-[#C87D4B]/40 shadow-2xl">
-            <div className="flex items-center justify-between pb-6 border-b border-white/10 mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10 mb-8">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-[#C87D4B]/20 border border-[#C87D4B] flex items-center justify-center text-[#C87D4B]">
+                <div className="w-10 h-10 rounded-full bg-[#C87D4B]/20 border border-[#C87D4B] flex items-center justify-center text-[#C87D4B] shrink-0">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
                 <div>
@@ -150,9 +161,20 @@ export const ConsultationEstimator: React.FC<ConsultationEstimatorProps> = ({
                   <p className="text-xs text-[#94A3B8]">Reference #{submittedDocket.referenceId} · {submittedDocket.timestamp}</p>
                 </div>
               </div>
-              <span className="text-xs font-mono font-semibold text-[#C87D4B] bg-[#C87D4B]/10 px-3 py-1 rounded border border-[#C87D4B]/30">
-                Demo Status: Ready for CRM
-              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleCopyReference(submittedDocket.referenceId)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white/5 hover:bg-white/10 text-xs text-[#CBD5E1] border border-white/10 transition-colors cursor-pointer"
+                  aria-label="Copy reference ID to clipboard"
+                >
+                  {copiedRef ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-[#C87D4B]" />}
+                  <span aria-live="polite">{copiedRef ? 'Copied' : 'Copy ID'}</span>
+                </button>
+                <span className="text-xs font-mono font-semibold text-[#C87D4B] bg-[#C87D4B]/10 px-3 py-1 rounded border border-[#C87D4B]/30">
+                  Demo Status: Ready for CRM
+                </span>
+              </div>
             </div>
 
             {/* Scope Summary */}
@@ -215,10 +237,10 @@ export const ConsultationEstimator: React.FC<ConsultationEstimatorProps> = ({
               
               {/* Step 1: Property Type */}
               <div>
-                <label className="text-xs font-bold uppercase tracking-wider text-[#C87D4B] block mb-3">
+                <label id="label-property-type" className="text-xs font-bold uppercase tracking-wider text-[#C87D4B] block mb-3">
                   01. Select Property Classification
                 </label>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <div role="radiogroup" aria-labelledby="label-property-type" className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
                   {[
                     { id: 'residential', label: 'Luxury Res.', icon: Home },
                     { id: 'commercial', label: 'Commercial', icon: Building2 },
@@ -231,6 +253,8 @@ export const ConsultationEstimator: React.FC<ConsultationEstimatorProps> = ({
                       <button
                         key={p.id}
                         type="button"
+                        role="radio"
+                        aria-checked={isSelected}
                         onClick={() => setPropertyType(p.id as any)}
                         className={`p-3 rounded-lg border text-left transition-all cursor-pointer flex flex-col justify-between h-20 ${
                           isSelected
@@ -248,10 +272,10 @@ export const ConsultationEstimator: React.FC<ConsultationEstimatorProps> = ({
 
               {/* Step 2: System Category */}
               <div>
-                <label className="text-xs font-bold uppercase tracking-wider text-[#C87D4B] block mb-3">
+                <label id="label-service-discipline" className="text-xs font-bold uppercase tracking-wider text-[#C87D4B] block mb-3">
                   02. Desired Roofing Discipline
                 </label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div role="radiogroup" aria-labelledby="label-service-discipline" className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {[
                     { id: 'standing-seam', label: 'Standing Seam Metal', note: '24-Ga Zinc & Galvalume with concealed clips' },
                     { id: 'slate-tile', label: 'Natural Slate & Clay Tile', note: 'Quarried S-1 stone with solid copper fixings' },
@@ -263,6 +287,8 @@ export const ConsultationEstimator: React.FC<ConsultationEstimatorProps> = ({
                       <button
                         key={s.id}
                         type="button"
+                        role="radio"
+                        aria-checked={isSelected}
                         onClick={() => setServiceType(s.id as any)}
                         className={`p-4 rounded-lg border text-left transition-all cursor-pointer ${
                           isSelected
@@ -391,15 +417,18 @@ export const ConsultationEstimator: React.FC<ConsultationEstimatorProps> = ({
                   <input
                     id="contact-fullName"
                     type="text"
+                    autoComplete="name"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
+                    aria-invalid={Boolean(formErrors.fullName)}
+                    aria-describedby={formErrors.fullName ? 'error-fullName' : undefined}
                     placeholder="e.g. Jonathan Robinson"
                     className={`w-full p-2.5 rounded-lg bg-[#0E121A] border text-xs text-white placeholder-white/30 focus:outline-none ${
                       formErrors.fullName ? 'border-rose-500' : 'border-white/10 focus:border-[#C87D4B]'
                     }`}
                   />
                   {formErrors.fullName && (
-                    <span className="text-[11px] text-rose-400 mt-1 block">{formErrors.fullName}</span>
+                    <span id="error-fullName" role="alert" className="text-[11px] text-rose-400 mt-1 block">{formErrors.fullName}</span>
                   )}
                 </div>
 
@@ -411,15 +440,18 @@ export const ConsultationEstimator: React.FC<ConsultationEstimatorProps> = ({
                     <input
                       id="contact-email"
                       type="email"
+                      autoComplete="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
+                      aria-invalid={Boolean(formErrors.email)}
+                      aria-describedby={formErrors.email ? 'error-email' : undefined}
                       placeholder="client@estate.com"
                       className={`w-full p-2.5 rounded-lg bg-[#0E121A] border text-xs text-white placeholder-white/30 focus:outline-none ${
                         formErrors.email ? 'border-rose-500' : 'border-white/10 focus:border-[#C87D4B]'
                       }`}
                     />
                     {formErrors.email && (
-                      <span className="text-[11px] text-rose-400 mt-1 block">{formErrors.email}</span>
+                      <span id="error-email" role="alert" className="text-[11px] text-rose-400 mt-1 block">{formErrors.email}</span>
                     )}
                   </div>
 
@@ -430,15 +462,18 @@ export const ConsultationEstimator: React.FC<ConsultationEstimatorProps> = ({
                     <input
                       id="contact-phone"
                       type="tel"
+                      autoComplete="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
+                      aria-invalid={Boolean(formErrors.phone)}
+                      aria-describedby={formErrors.phone ? 'error-phone' : undefined}
                       placeholder="(555) 234-5678"
                       className={`w-full p-2.5 rounded-lg bg-[#0E121A] border text-xs text-white placeholder-white/30 focus:outline-none ${
                         formErrors.phone ? 'border-rose-500' : 'border-white/10 focus:border-[#C87D4B]'
                       }`}
                     />
                     {formErrors.phone && (
-                      <span className="text-[11px] text-rose-400 mt-1 block">{formErrors.phone}</span>
+                      <span id="error-phone" role="alert" className="text-[11px] text-rose-400 mt-1 block">{formErrors.phone}</span>
                     )}
                   </div>
                 </div>
@@ -450,15 +485,18 @@ export const ConsultationEstimator: React.FC<ConsultationEstimatorProps> = ({
                   <input
                     id="contact-address"
                     type="text"
+                    autoComplete="street-address"
                     value={projectAddress}
                     onChange={(e) => setProjectAddress(e.target.value)}
+                    aria-invalid={Boolean(formErrors.projectAddress)}
+                    aria-describedby={formErrors.projectAddress ? 'error-projectAddress' : undefined}
                     placeholder="e.g. 742 Ridgeview Terrace, North Sector"
                     className={`w-full p-2.5 rounded-lg bg-[#0E121A] border text-xs text-white placeholder-white/30 focus:outline-none ${
                       formErrors.projectAddress ? 'border-rose-500' : 'border-white/10 focus:border-[#C87D4B]'
                     }`}
                   />
                   {formErrors.projectAddress && (
-                    <span className="text-[11px] text-rose-400 mt-1 block">{formErrors.projectAddress}</span>
+                    <span id="error-projectAddress" role="alert" className="text-[11px] text-rose-400 mt-1 block">{formErrors.projectAddress}</span>
                   )}
                 </div>
 

@@ -1,0 +1,3 @@
+# Netlify SPA redirects configuration
+# Ensures client-side routing works for all routes, while existing static assets are served directly
+/*    /index.html   200

@@ -35,7 +35,7 @@ export const EngineeringRationale: React.FC = () => {
   ];
 
   return (
-    <section id="craftsmanship" className="py-20 lg:py-28 border-b border-white/5 bg-[#0D1017] overflow-hidden">
+    <section id="craftsmanship" className="scroll-mt-24 py-20 lg:py-28 border-b border-white/5 bg-[#0D1017] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}

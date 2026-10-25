@@ -255,26 +255,25 @@ export const ProposalDrawer: React.FC<ProposalDrawerProps> = ({ isOpen, onClose 
 
                     <div className="space-y-3">
                       {checklist.map((item) => (
-                        <div
+                        <button
                           key={item.id}
+                          type="button"
+                          role="checkbox"
+                          aria-checked={item.checked}
                           onClick={() => toggleChecklistItem(item.id)}
-                          className={`p-4 rounded-xl border transition-all cursor-pointer flex items-start gap-3.5 ${
+                          className={`w-full text-left p-4 rounded-xl border transition-all cursor-pointer flex items-start gap-3.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A373] ${
                             item.checked
                               ? 'bg-[#121A16] border-emerald-500/40 text-emerald-200'
                               : 'bg-[#11151D] border-white/5 hover:border-white/20'
                           }`}
                         >
-                          <button
-                            type="button"
-                            className="mt-0.5 text-[#D4A373] focus:outline-none"
-                            aria-label={`Toggle ${item.label}`}
-                          >
+                          <span className="mt-0.5 text-[#D4A373] shrink-0" aria-hidden="true">
                             {item.checked ? (
                               <CheckSquare className="w-4 h-4 text-emerald-400" />
                             ) : (
                               <Square className="w-4 h-4 text-[#94A3B8]" />
                             )}
-                          </button>
+                          </span>
                           <div>
                             <span className={`text-xs font-semibold block ${item.checked ? 'line-through text-emerald-300' : 'text-white'}`}>
                               {item.label}
@@ -283,7 +282,7 @@ export const ProposalDrawer: React.FC<ProposalDrawerProps> = ({ isOpen, onClose 
                               {item.details}
                             </span>
                           </div>
-                        </div>
+                        </button>
                       ))}
                     </div>
                   </motion.div>

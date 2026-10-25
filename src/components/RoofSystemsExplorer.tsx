@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Layers, ShieldCheck, ChevronRight, Info, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { RoofingSystemData } from '../types';
+import { ROOF_IMAGES } from '../assets/images';
 
 const ROOF_SYSTEMS: RoofingSystemData[] = [
   {
@@ -12,7 +13,7 @@ const ROOF_SYSTEMS: RoofingSystemData[] = [
     expectedLifespan: '50 – 75+ Years',
     windRating: 'UL 580 Class 90 (up to 150 mph)',
     fireRating: 'Class A Non-Combustible',
-    imageSrc: '/src/assets/images/service_standing_seam_1792831596442.jpg',
+    imageSrc: ROOF_IMAGES.standingSeam,
     layers: [
       {
         id: 'layer-metal-deck',
@@ -72,7 +73,7 @@ const ROOF_SYSTEMS: RoofingSystemData[] = [
     expectedLifespan: '75 – 100+ Years',
     windRating: '130+ mph with full copper tie clips',
     fireRating: 'Class A Non-Combustible Stone',
-    imageSrc: '/src/assets/images/service_tile_slate_1792831597010.jpg',
+    imageSrc: ROOF_IMAGES.tileSlate,
     layers: [
       {
         id: 'layer-slate-deck',
@@ -124,7 +125,7 @@ const ROOF_SYSTEMS: RoofingSystemData[] = [
     expectedLifespan: '25 – 35 Years',
     windRating: 'FM 1-90 to FM 1-120 Class Certified',
     fireRating: 'Class A Flame Spread Rated',
-    imageSrc: '/src/assets/images/service_commercial_membrane_1792831596263.jpg',
+    imageSrc: ROOF_IMAGES.commercialMembrane,
     layers: [
       {
         id: 'layer-tpo-deck',
@@ -183,7 +184,7 @@ export const RoofSystemsExplorer: React.FC = () => {
   };
 
   return (
-    <section id="systems-explorer" className="py-20 lg:py-28 border-b border-white/5 bg-[#0D1017] overflow-hidden">
+    <section id="systems-explorer" className="scroll-mt-24 py-20 lg:py-28 border-b border-white/5 bg-[#0D1017] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
@@ -207,12 +208,20 @@ export const RoofSystemsExplorer: React.FC = () => {
         </motion.div>
 
         {/* System Selector Tabs with Animated Background Pill */}
-        <div className="flex flex-wrap gap-2 p-1.5 bg-[#141820] border border-white/10 rounded-xl max-w-2xl mb-10 shadow-lg relative">
+        <div
+          role="tablist"
+          aria-label="Roofing Systems Specification"
+          className="flex flex-wrap gap-2 p-1.5 bg-[#141820] border border-white/10 rounded-xl max-w-2xl mb-10 shadow-lg relative"
+        >
           {ROOF_SYSTEMS.map((system, idx) => {
             const isSelected = selectedSystemIndex === idx;
             return (
               <button
                 key={system.id}
+                role="tab"
+                id={`tab-sys-${system.id}`}
+                aria-selected={isSelected}
+                aria-controls={`panel-sys-${system.id}`}
                 onClick={() => handleSystemChange(idx)}
                 className={`flex-1 min-w-[180px] py-2.5 px-4 text-xs font-semibold rounded-lg transition-colors text-center cursor-pointer whitespace-nowrap relative z-10 ${
                   isSelected ? 'text-black' : 'text-[#94A3B8] hover:text-white'
@@ -245,12 +254,17 @@ export const RoofSystemsExplorer: React.FC = () => {
               </span>
             </div>
 
-            <div className="space-y-2">
+            <div role="tablist" aria-label="Assembly layers" className="space-y-2">
               {currentSystem.layers.map((layer, idx) => {
                 const isSelected = activeLayerIndex === idx;
                 return (
                   <motion.button
                     key={layer.id}
+                    role="tab"
+                    id={`layer-tab-${layer.id}`}
+                    aria-selected={isSelected}
+                    aria-controls="layer-panel"
+                    aria-label={`Layer ${layer.number}: ${layer.name}`}
                     onClick={() => setActiveLayerIndex(idx)}
                     whileHover={{ x: 4 }}
                     whileTap={{ scale: 0.99 }}
@@ -303,8 +317,13 @@ export const RoofSystemsExplorer: React.FC = () => {
           </div>
 
           {/* Right Column: Layer Detailed Breakdown Card with AnimatePresence */}
-          <div className="lg:col-span-7">
-            <div className="p-8 rounded-xl bg-[#141822] border border-white/10 shadow-2xl relative overflow-hidden min-h-[440px]">
+          <div
+            id={`panel-sys-${currentSystem.id}`}
+            role="tabpanel"
+            aria-labelledby={`tab-sys-${currentSystem.id}`}
+            className="lg:col-span-7"
+          >
+            <div id="layer-panel" className="p-8 rounded-xl bg-[#141822] border border-white/10 shadow-2xl relative overflow-hidden min-h-[440px]">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={`${currentSystem.id}-${activeLayer.id}`}

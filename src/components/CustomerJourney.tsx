@@ -39,7 +39,7 @@ export const CustomerJourney: React.FC = () => {
   ];
 
   return (
-    <section id="process" className="py-20 lg:py-28 border-b border-white/5 bg-[#0B0D11] overflow-hidden">
+    <section id="process" className="scroll-mt-24 py-20 lg:py-28 border-b border-white/5 bg-[#0B0D11] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
@@ -79,8 +79,11 @@ export const CustomerJourney: React.FC = () => {
             const Icon = step.icon;
             const isActive = activeStep === idx;
             return (
-              <motion.div
+              <motion.button
                 key={step.number}
+                type="button"
+                aria-pressed={isActive}
+                aria-label={`Phase ${step.number}: ${step.title}`}
                 initial={{ opacity: 0, y: 25 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
@@ -88,7 +91,7 @@ export const CustomerJourney: React.FC = () => {
                 whileHover={{ y: -6, transition: { duration: 0.2 } }}
                 onMouseEnter={() => setActiveStep(idx)}
                 onClick={() => setActiveStep(idx)}
-                className={`p-6 rounded-xl border transition-all duration-300 flex flex-col justify-between cursor-pointer relative group ${
+                className={`p-6 rounded-xl border transition-all duration-300 flex flex-col justify-between cursor-pointer relative group text-left w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A373] ${
                   isActive
                     ? 'bg-[#181E2A] border-[#D4A373] shadow-xl shadow-[#D4A373]/10 scale-[1.02]'
                     : 'bg-[#11151D] border-white/10 hover:border-white/20'
@@ -114,7 +117,7 @@ export const CustomerJourney: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px] font-mono">
+                <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px] font-mono w-full">
                   <span className={isActive ? 'text-[#D4A373] font-bold' : 'text-white/40'}>
                     Phase {idx + 1} of 5
                   </span>
@@ -122,7 +125,7 @@ export const CustomerJourney: React.FC = () => {
                     <span className="w-2 h-2 rounded-full bg-[#D4A373] animate-pulse" />
                   )}
                 </div>
-              </motion.div>
+              </motion.button>
             );
           })}
         </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Sparkles, X, Phone } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface NavbarProps {
@@ -123,13 +123,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation, onOpenPropos
 
           {/* Right: Direct Arrow Contact / Phone Reference Style */}
           <div className="flex items-center gap-4 shrink-0">
-            <button
-              onClick={onOpenConsultation}
+            <a
+              href="tel:+15557624676"
               className="group hidden sm:flex items-center gap-2 text-white hover:text-[#D4A373] transition-colors py-2 px-3 text-sm sm:text-base font-semibold cursor-pointer tracking-wide"
+              aria-label="Call Robinson Roofing at (555) 762-4676"
             >
               <ArrowRight className="w-4 h-4 text-[#D4A373] group-hover:translate-x-1.5 transition-transform duration-200" />
               <span>(555) 762-4676</span>
-            </button>
+            </a>
 
             <motion.button
               onClick={onOpenConsultation}
@@ -146,6 +147,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation, onOpenPropos
               className="lg:hidden p-2 text-white hover:text-[#D4A373] rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4A373] relative w-10 h-10 flex flex-col items-center justify-center cursor-pointer"
               aria-label={mobileMenuOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
               aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-navigation-drawer"
             >
               <span
                 className={`w-6 h-0.5 bg-current rounded-full transition-all duration-300 ease-in-out ${
@@ -184,6 +186,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation, onOpenPropos
 
             {/* Smooth Animated Slide-In Panel */}
             <motion.div
+              id="mobile-navigation-drawer"
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
@@ -199,10 +202,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation, onOpenPropos
                   </div>
                   <button
                     onClick={() => setMobileMenuOpen(false)}
-                    className="p-2 text-white/70 hover:text-white rounded-lg hover:bg-white/5 transition-colors"
+                    className="p-2 text-white/70 hover:text-white rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
                     aria-label="Close menu"
                   >
-                    <span className="text-xl leading-none">&times;</span>
+                    <X className="w-5 h-5" />
                   </button>
                 </div>
 
@@ -234,6 +237,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation, onOpenPropos
                 transition={{ delay: 0.35, duration: 0.3 }}
                 className="pt-8 flex flex-col gap-3"
               >
+                <a
+                  href="tel:+15557624676"
+                  className="w-full py-3 text-center text-xs font-semibold text-white/90 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <Phone className="w-3.5 h-3.5 text-[#D4A373]" />
+                  <span>Call (555) 762-4676</span>
+                </a>
                 <button
                   onClick={() => {
                     setMobileMenuOpen(false);
@@ -248,7 +258,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenConsultation, onOpenPropos
                     setMobileMenuOpen(false);
                     onOpenProposalDrawer();
                   }}
-                  className="w-full py-3 text-center text-xs text-white/70 hover:text-white border border-white/10 rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
+                  className="w-full py-2.5 text-center text-xs text-white/70 hover:text-white border border-white/10 rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
                 >
                   View Proposal Strategy
                 </button>

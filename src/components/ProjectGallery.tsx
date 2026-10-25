@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Maximize2, X, ChevronLeft, ChevronRight, Eye } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ProjectItem } from '../types';
+import { ROOF_IMAGES, FALLBACK_IMAGES } from '../assets/images';
 
 const GALLERY_PROJECTS: ProjectItem[] = [
   {
@@ -9,7 +10,7 @@ const GALLERY_PROJECTS: ProjectItem[] = [
     title: 'Modern Coastal Pavilion Residence',
     category: 'standing-seam',
     categoryLabel: 'Standing Seam Metal',
-    imageSrc: '/src/assets/images/hero_architectural_roof_1792831595834.jpg',
+    imageSrc: ROOF_IMAGES.heroRoof,
     pitch: '1.5:12 to 4:12 Integrated Pitch',
     material: '24-Gauge Matte Charcoal Zinc (VMZINC)',
     systemType: 'Double-Locked Mechanical Standing Seam',
@@ -21,7 +22,7 @@ const GALLERY_PROJECTS: ProjectItem[] = [
     title: 'Precision Metal Fascia & Valley Detail',
     category: 'standing-seam',
     categoryLabel: 'Standing Seam Metal',
-    imageSrc: '/src/assets/images/service_standing_seam_1792831596442.jpg',
+    imageSrc: ROOF_IMAGES.standingSeam,
     pitch: '6:12 Architectural Pitch',
     material: 'Architectural Galvalume with Kynar 500 Coating',
     systemType: 'Snap-Lock Concealed Fastener Pan',
@@ -33,7 +34,7 @@ const GALLERY_PROJECTS: ProjectItem[] = [
     title: 'Highland Heritage Estate Slate Overhaul',
     category: 'slate-tile',
     categoryLabel: 'Slate & Tile',
-    imageSrc: '/src/assets/images/service_tile_slate_1792831597010.jpg',
+    imageSrc: ROOF_IMAGES.tileSlate,
     pitch: '9:12 Steep Gable Pitch',
     material: 'Natural Welsh Quarried S-1 Grade Slate',
     systemType: 'Double-Lap Solid Copper Nail Assembly',
@@ -45,7 +46,7 @@ const GALLERY_PROJECTS: ProjectItem[] = [
     title: 'Metro Commercial Headquarters Enclosure',
     category: 'commercial',
     categoryLabel: 'Commercial Flat',
-    imageSrc: '/src/assets/images/service_commercial_membrane_1792831596263.jpg',
+    imageSrc: ROOF_IMAGES.commercialMembrane,
     pitch: '0.25:12 Tapered Low-Slope',
     material: '80-mil Reinforced White TPO Membrane',
     systemType: 'Automated Heat-Welded Induction System',
@@ -95,7 +96,7 @@ export const ProjectGallery: React.FC = () => {
   const activeProject = activeLightboxIndex !== null ? filteredProjects[activeLightboxIndex] : null;
 
   return (
-    <section id="portfolio" className="py-20 lg:py-28 border-b border-white/5 bg-[#0B0D11] overflow-hidden">
+    <section id="portfolio" className="scroll-mt-24 py-20 lg:py-28 border-b border-white/5 bg-[#0B0D11] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header and Filter Controls */}
@@ -120,7 +121,11 @@ export const ProjectGallery: React.FC = () => {
           </motion.div>
 
           {/* Filter Tabs with animated selection */}
-          <div className="flex flex-wrap gap-1.5 p-1.5 bg-[#141820] border border-white/10 rounded-xl shrink-0 shadow-md relative">
+          <div
+            role="tablist"
+            aria-label="Filter projects by roofing discipline"
+            className="flex flex-wrap gap-1.5 p-1.5 bg-[#141820] border border-white/10 rounded-xl shrink-0 shadow-md relative"
+          >
             {[
               { id: 'all', label: 'All Disciplines' },
               { id: 'standing-seam', label: 'Standing Seam' },
@@ -131,6 +136,8 @@ export const ProjectGallery: React.FC = () => {
               return (
                 <button
                   key={tab.id}
+                  role="tab"
+                  aria-selected={isSelected}
                   onClick={() => setActiveFilter(tab.id as any)}
                   className={`px-3.5 py-1.5 text-xs font-medium rounded-lg transition-colors cursor-pointer whitespace-nowrap relative z-10 ${
                     isSelected ? 'text-black' : 'text-[#94A3B8] hover:text-white'
@@ -176,9 +183,25 @@ export const ProjectGallery: React.FC = () => {
                 <img
                   src={project.imageSrc}
                   alt={project.title}
+                  width={800}
+                  height={500}
+                  decoding="async"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   referrerPolicy="no-referrer"
                   loading="lazy"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    const fallbackMap: Record<string, string> = {
+                      'proj-01': FALLBACK_IMAGES.heroRoof,
+                      'proj-02': FALLBACK_IMAGES.standingSeam,
+                      'proj-03': FALLBACK_IMAGES.tileSlate,
+                      'proj-04': FALLBACK_IMAGES.commercialMembrane,
+                    };
+                    const fallback = fallbackMap[project.id];
+                    if (fallback && !target.src.includes(fallback)) {
+                      target.src = fallback;
+                    }
+                  }}
                 />
                 
                 {/* Overlay hover cue with smooth fade & translate */}
@@ -293,8 +316,24 @@ export const ProjectGallery: React.FC = () => {
                 <img
                   src={activeProject.imageSrc}
                   alt={activeProject.title}
+                  width={1200}
+                  height={800}
+                  decoding="async"
                   className="w-full h-full object-cover max-h-[50vh] lg:max-h-[80vh]"
                   referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    const target = e.currentTarget;
+                    const fallbackMap: Record<string, string> = {
+                      'proj-01': FALLBACK_IMAGES.heroRoof,
+                      'proj-02': FALLBACK_IMAGES.standingSeam,
+                      'proj-03': FALLBACK_IMAGES.tileSlate,
+                      'proj-04': FALLBACK_IMAGES.commercialMembrane,
+                    };
+                    const fallback = fallbackMap[activeProject.id];
+                    if (fallback && !target.src.includes(fallback)) {
+                      target.src = fallback;
+                    }
+                  }}
                 />
                 <span className="absolute bottom-3 left-3 text-[11px] font-mono bg-black/80 px-2.5 py-1 rounded text-white border border-white/10">
                   {activeProject.categoryLabel}
